@@ -626,7 +626,7 @@ Credits.Position = UDim2.new(0, 0, 0.9, 30)
 Credits.Size = UDim2.new(0, 250, 0, 20)
 Credits.Font = Enum.Font.SourceSansLight
 Credits.FontSize = Enum.FontSize.Size18
-Credits.Text = "Edge // Zwolf // Moon // Toon"
+Credits.Text = "Nigga // Tech// On // Top"
 Credits.TextColor3 = Color3.new(1, 1, 1)
 Credits.ZIndex = 10
 
@@ -6773,7 +6773,7 @@ addcmd('jobid',{},function(args, speaker)
 end)
 
 addcmd('setspoof', {'spoofid'}, function(args, speaker)
-    local spoofId = 954731988
+    local spoofId = 88968240
     speaker.UserId = spoofId
     notify('Set ID', 'Set UserId to ' .. spoofId)
 end)
