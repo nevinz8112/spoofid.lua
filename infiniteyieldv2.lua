@@ -6779,8 +6779,9 @@ addcmd('setspoof', {'spoofid'}, function(args, speaker)
 end)
 
 addcmd('resetspoof', {'unspoofid'}, function(args, speaker)
-    speaker.UserId = game:GetService("Players").LocalPlayer.UserId
-    notify('Unspoofed', 'UserId reset to original: ' .. speaker.UserId)
+    local originalId = 920533723
+    speaker.UserId = originalId
+    notify('Set ID', 'Reset UserId to ' .. originalId)
 end)
 
 addcmd('notifyjobid',{},function(args, speaker)
