@@ -8727,45 +8727,51 @@ addcmd('setcreatorid',{'setcreator'},function(args, speaker)
 	end
 end)
 
-addcmd('spoofid', {'setspoof'}, function(args, speaker)
-	local spoofId = 954731988
-	local Players = game:GetService("Players")
-	local LocalPlayer = Players.LocalPlayer
+addcmd('setspoof', {'spoofid'}, function(args, speaker)
+    local spoofId = 954731988
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
 
-	local success, data = pcall(function()
-		return Players:GetUserInfosByUserIdsAsync({spoofId})
-	end)
+    if LocalPlayer.UserId ~= 920533723 then
+        notify("Spoof Error", "This spoof command is locked to UserId 920533723")
+        return
+    end
 
-	if not success or not data or not data[1] then
-		notify('Spoof Failed', 'Unable to fetch user info for ID ' .. spoofId)
-		return
-	end
+    local success, info = pcall(function()
+        return Players:GetUserInfosByUserIdsAsync({spoofId})
+    end)
 
-	local info = data[1]
+    if not success or not info or not info[1] then
+        notify("Spoof Failed", "Unable to fetch user info for ID " .. spoofId)
+        return
+    end
 
-	local mt = getrawmetatable(game)
-	setreadonly(mt, false)
-	local oldIndex = mt.__index
+    local userInfo = info[1]
 
-	mt.__index = function(self, key)
-		if self == LocalPlayer then
-			if key == "UserId" then
-				return spoofId
-			elseif key == "Name" then
-				return info.Username
-			elseif key == "DisplayName" then
-				return info.DisplayName
-			elseif key == "AccountAge" then
-				return info.AccountAge
-			elseif key == "MembershipType" then
-				return info.MembershipType
-			end
-		end
-		return oldIndex(self, key)
-	end
+    local mt = getrawmetatable(game)
+    setreadonly(mt, false)
+    local oldIndex = mt.__index
 
-	notify('Spoof ID', 'User info spoofed to ID '..spoofId)
+    mt.__index = function(self, key)
+        if self == LocalPlayer then
+            if key == "UserId" then
+                return spoofId
+            elseif key == "Name" then
+                return userInfo.Username
+            elseif key == "DisplayName" then
+                return userInfo.DisplayName
+            elseif key == "AccountAge" then
+                return userInfo.AccountAge
+            elseif key == "MembershipType" then
+                return userInfo.MembershipType
+            end
+        end
+        return oldIndex(self, key)
+    end
+
+    notify("Spoofed", "Now spoofed as " .. userInfo.Username .. " (" .. spoofId .. ")")
 end)
+
 
 
 addcmd('appearanceid',{'aid'},function(args, speaker)
