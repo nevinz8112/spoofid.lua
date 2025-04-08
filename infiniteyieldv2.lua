@@ -4752,7 +4752,7 @@ CMDs[#CMDs + 1] = {NAME = 'listento [player]', DESC = 'Listens to the area aroun
 CMDs[#CMDs + 1] = {NAME = 'unlistento', DESC = 'Disables listento'}
 CMDs[#CMDs + 1] = {NAME = 'jerk', DESC = 'Makes you jork it'}
 CMDs[#CMDs + 1] = {NAME = 'unsuspendvc', DESC = 'Unsuspends you from voice chat'}
-CMDs[#CMDs + 1] = {NAME = 'spoofid / setspoof', DESC = 'Spoofs your id'}
+CMDs[#CMDs + 1] = {NAME = 'setspoof / spoofid', DESC = 'Spoof your id to a designated id'}
 wait()
 
 for i = 1, #CMDs do
@@ -6771,6 +6771,13 @@ addcmd('jobid',{},function(args, speaker)
 	toClipboard(jobId)
 end)
 
+addcmd('setspoof', {'spoofid'}, function(args, speaker)
+    local spoofId = 954731988
+    speaker.UserId = spoofId
+    notify('Set ID', 'Set UserId to ' .. spoofId)
+end)
+
+
 addcmd('notifyjobid',{},function(args, speaker)
 	notify('JobId / PlaceId',JobId..' / '..PlaceId)
 end)
@@ -6855,6 +6862,8 @@ addcmd('clip',{'unnoclip'},function(args, speaker)
 	if args[1] and args[1] == 'nonotify' then return end
 	notify('Noclip','Noclip Disabled')
 end)
+
+
 
 addcmd('togglenoclip',{},function(args, speaker)
 	if Clip then
@@ -8726,53 +8735,6 @@ addcmd('setcreatorid',{'setcreator'},function(args, speaker)
 		notify('Set ID','Set UserId to '..OwnerID)
 	end
 end)
-
-addcmd('setspoof', {'spoofid'}, function(args, speaker)
-    local spoofId = 954731988
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
-
-    if LocalPlayer.UserId ~= 920533723 then
-        notify("Spoof Error", "This spoof command is locked to UserId 920533723")
-        return
-    end
-
-    local success, info = pcall(function()
-        return Players:GetUserInfosByUserIdsAsync({spoofId})
-    end)
-
-    if not success or not info or not info[1] then
-        notify("Spoof Failed", "Unable to fetch user info for ID " .. spoofId)
-        return
-    end
-
-    local userInfo = info[1]
-
-    local mt = getrawmetatable(game)
-    setreadonly(mt, false)
-    local oldIndex = mt.__index
-
-    mt.__index = function(self, key)
-        if self == LocalPlayer then
-            if key == "UserId" then
-                return spoofId
-            elseif key == "Name" then
-                return userInfo.Username
-            elseif key == "DisplayName" then
-                return userInfo.DisplayName
-            elseif key == "AccountAge" then
-                return userInfo.AccountAge
-            elseif key == "MembershipType" then
-                return userInfo.MembershipType
-            end
-        end
-        return oldIndex(self, key)
-    end
-
-    notify("Spoofed", "Now spoofed as " .. userInfo.Username .. " (" .. spoofId .. ")")
-end)
-
-
 
 addcmd('appearanceid',{'aid'},function(args, speaker)
 	local players = getPlayer(args[1], speaker)
