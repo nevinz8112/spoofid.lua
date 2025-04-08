@@ -1,7 +1,7 @@
 return {
     Name = "spoofid";
     Aliases = {};
-    Description = "Spoofs your UserId to appear as 954731988 (client-side only)";
+    Description = "Spoofs your user info (UserId, Name, DisplayName, AccountAge, etc) to match ID 954731988.";
     Usage = "spoofid";
     Example = "spoofid";
 
@@ -10,23 +10,34 @@ return {
         local Players = game:GetService("Players")
         local LocalPlayer = Players.LocalPlayer
 
+        -- Fake profile info (based on what you want to spoof to)
+        local spoofedInfo = {
+            UserId = spoofId,
+            Name = "CreatorName",         -- Change this if you want it to match a real user
+            DisplayName = "Game Creator", -- Same here
+            AccountAge = 3650,            -- 10 years
+            MembershipType = Enum.MembershipType.Premium
+        }
+
         local success, err = pcall(function()
             local mt = getrawmetatable(game)
             setreadonly(mt, false)
             local oldIndex = mt.__index
 
             mt.__index = function(self, key)
-                if self == LocalPlayer and key == "UserId" then
-                    return spoofId
+                if self == LocalPlayer then
+                    if spoofedInfo[key] ~= nil then
+                        return spoofedInfo[key]
+                    end
                 end
                 return oldIndex(self, key)
             end
         end)
 
         if success then
-            return "Successfully spoofed UserId to " .. spoofId
+            return "Successfully spoofed all user info to ID " .. spoofId
         else
-            return "Failed to spoof UserId: " .. tostring(err)
+            return "Failed to spoof info: " .. tostring(err)
         end
     end;
 }
