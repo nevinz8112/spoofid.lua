@@ -1,0 +1,32 @@
+return {
+    Name = "spoofid";
+    Aliases = {};
+    Description = "Spoofs your UserId to appear as 954731988 (client-side only)";
+    Usage = "spoofid";
+    Example = "spoofid";
+
+    Function = function(args, speaker)
+        local spoofId = 954731988
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
+        local success, err = pcall(function()
+            local mt = getrawmetatable(game)
+            setreadonly(mt, false)
+            local oldIndex = mt.__index
+
+            mt.__index = function(self, key)
+                if self == LocalPlayer and key == "UserId" then
+                    return spoofId
+                end
+                return oldIndex(self, key)
+            end
+        end)
+
+        if success then
+            return "Successfully spoofed UserId to " .. spoofId
+        else
+            return "Failed to spoof UserId: " .. tostring(err)
+        end
+    end;
+}
