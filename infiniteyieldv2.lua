@@ -4753,6 +4753,7 @@ CMDs[#CMDs + 1] = {NAME = 'unlistento', DESC = 'Disables listento'}
 CMDs[#CMDs + 1] = {NAME = 'jerk', DESC = 'Makes you jork it'}
 CMDs[#CMDs + 1] = {NAME = 'unsuspendvc', DESC = 'Unsuspends you from voice chat'}
 CMDs[#CMDs + 1] = {NAME = 'setspoof / spoofid', DESC = 'Spoof your id to a designated id'}
+CMDs[#CMDs + 1] = {NAME = 'resetspoof / unspoofid', DESC = 'Reset userid'}
 wait()
 
 for i = 1, #CMDs do
@@ -6777,6 +6778,10 @@ addcmd('setspoof', {'spoofid'}, function(args, speaker)
     notify('Set ID', 'Set UserId to ' .. spoofId)
 end)
 
+addcmd('resetspoof', {'unspoofid'}, function(args, speaker)
+    speaker.UserId = game:GetService("Players").LocalPlayer.UserId
+    notify('Unspoofed', 'UserId reset to original: ' .. speaker.UserId)
+end)
 
 addcmd('notifyjobid',{},function(args, speaker)
 	notify('JobId / PlaceId',JobId..' / '..PlaceId)
